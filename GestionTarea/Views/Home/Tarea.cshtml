@@ -1,0 +1,61 @@
+﻿@model GestionTarea.ViewModels.ListaTareasViewModel
+
+@{
+    ViewData["Title"] = "Tareas";
+}
+
+<h2>Mis Tareas</h2>
+
+<form method="get" asp-action="Tarea">
+    <label for="completadas">Estado:</label>
+    <select name="completadas">
+        <option value="">Todas</option>
+        <option value="true" selected="@(Model.FiltroCompletadas == true)">Completadas</option>
+        <option value="false" selected="@(Model.FiltroCompletadas == false)">Pendientes</option>
+    </select>
+
+    <label for="fechaVencimiento">Fecha de vencimiento:</label>
+    <input type="date" name="fechaVencimiento" value="@Model.FiltroFechaVencimiento?.ToString("yyyy-MM-dd")" />
+
+    <button type="submit" class="btn btn-primary">Filtrar</button>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Título</th>
+            <th>Estado</th>
+            <th>Fecha Vencimiento</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var tarea in Model.Tareas)
+        {
+            <tr>
+                <td>@tarea.Titulo</td>
+                <td>@tarea.Descripcion</td>
+                <td>@(tarea.Completada ? "✅ Completada" : "⏳ Pendiente")</td>
+                <td>@(tarea.FechaVencimiento?.ToString("yyyy-MM-dd") ?? "Sin fecha")</td>
+                <td>
+                    <!-- Botón Marcar Como Completada -->
+                    <form method="post" asp-action="MarcarCompletada" asp-controller="Home">
+                        <input type="hidden" name="tareaId" value="@tarea.Id" />
+                        <button type="submit" class="btn btn-success">✔ Completar</button>
+                    </form>
+
+                    <!-- Botón Editar -->
+                    <a asp-action="Editar" asp-controller="Home" asp-route-id="@tarea.Id" class="btn btn-primary">✏ Editar</a>
+
+                    <!-- Botón Eliminar -->
+                    <form method="post" asp-action="Eliminar" asp-controller="Home" onsubmit="return confirm('¿Seguro que quieres eliminar esta tarea?');">
+                        <input type="hidden" name="tareaId" value="@tarea.Id" />
+                        <button type="submit" class="btn btn-danger">🗑 Eliminar</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="Crear" class="btn btn-primary">➕ Nueva Tarea</a>

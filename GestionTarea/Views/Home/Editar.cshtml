@@ -1,0 +1,29 @@
+﻿@model GestionTarea.ViewModels.TareaViewModel
+
+@{
+    ViewData["Title"] = "Editar Tarea";
+}
+
+<h2>Editar Tarea</h2>
+
+<form method="post" asp-action="Editar">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="mb-3">
+        <label for="Titulo" class="form-label">Título:</label>
+        <input type="text" asp-for="Titulo" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label for="Descripcion" class="form-label">Descripción:</label>
+        <textarea asp-for="Descripcion" class="form-control"></textarea>
+    </div>
+
+    <div class="mb-3">
+        <label for="FechaVencimiento" class="form-label">Fecha de Vencimiento:</label>
+        <input type="date" asp-for="FechaVencimiento" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Actualizar</button>
+    <a asp-action="Tarea" class="btn btn-secondary">Cancelar</a>
+</form>

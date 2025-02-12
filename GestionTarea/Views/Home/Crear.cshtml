@@ -1,0 +1,21 @@
+﻿@model GestionTarea.ViewModels.TareaViewModel
+
+@{
+    ViewData["Title"] = "Crear Nueva Tarea";
+}
+
+<form asp-controller="Home" asp-action="Crear" method="post">
+    <div class="mb-3">
+        <label class="form-label">Título</label>
+        <input type="text" class="form-control" name="Titulo" required />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Descripción</label>
+        <textarea class="form-control" name="Descripcion"></textarea>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Fecha de Vencimiento</label>
+        <input type="date" class="form-control" name="FechaVencimiento" />
+    </div>
+    <button type="submit" class="btn btn-primary">Guardar</button>
+</form>
