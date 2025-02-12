@@ -1,0 +1,52 @@
+﻿.tareas-container {
+    background: rgba(255, 255, 255, 0.2); 
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.filtros-container {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+.table {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+    .table th, .table td {
+        border: none;
+        padding: 12px;
+    }
+
+.btn {
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 14px;
+}
+
+.btn-primary {
+    background: rgba(0, 123, 255, 0.8);
+    border: none;
+}
+
+.btn-success {
+    background: rgba(40, 167, 69, 0.8);
+    border: none;
+}
+
+.btn-danger {
+    background: rgba(220, 53, 69, 0.8);
+    border: none;
+}
+
+.btn:hover {
+    opacity: 0.85;
+}

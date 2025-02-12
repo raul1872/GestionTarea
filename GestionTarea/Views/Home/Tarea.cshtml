@@ -4,58 +4,65 @@
     ViewData["Title"] = "Tareas";
 }
 
-<h2>Mis Tareas</h2>
 
-<form method="get" asp-action="Tarea">
-    <label for="completadas">Estado:</label>
-    <select name="completadas">
-        <option value="">Todas</option>
-        <option value="true" selected="@(Model.FiltroCompletadas == true)">Completadas</option>
-        <option value="false" selected="@(Model.FiltroCompletadas == false)">Pendientes</option>
-    </select>
+<div class="container tareas-container">
+    <h2 class="text-center text-dark">Mis Tareas</h2>
 
-    <label for="fechaVencimiento">Fecha de vencimiento:</label>
-    <input type="date" name="fechaVencimiento" value="@Model.FiltroFechaVencimiento?.ToString("yyyy-MM-dd")" />
+    <div class="filtros-container">
+        <form method="get" asp-action="Tarea" class="d-flex flex-wrap gap-3">
+            <div>
+                <label for="completadas" class="text-dark">Estado:</label>
+                <select name="completadas" class="form-control">
+                    <option value="">Todas</option>
+                    <option value="true" selected="@(Model.FiltroCompletadas == true)">Completadas</option>
+                    <option value="false" selected="@(Model.FiltroCompletadas == false)">Pendientes</option>
+                </select>
+            </div>
 
-    <button type="submit" class="btn btn-primary">Filtrar</button>
-</form>
+            <div>
+                <label for="fechaVencimiento" class="text-dark">Fecha de vencimiento:</label>
+                <input type="date" name="fechaVencimiento" value="@Model.FiltroFechaVencimiento?.ToString("yyyy-MM-dd")" class="form-control" />
+            </div>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Título</th>
-            <th>Estado</th>
-            <th>Fecha Vencimiento</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var tarea in Model.Tareas)
-        {
+            <button type="submit" class="btn btn-primary align-self-end">Filtrar</button>
+        </form>
+    </div>
+
+    <table class="table text-dark">
+        <thead>
             <tr>
-                <td>@tarea.Titulo</td>
-                <td>@tarea.Descripcion</td>
-                <td>@(tarea.Completada ? "✅ Completada" : "⏳ Pendiente")</td>
-                <td>@(tarea.FechaVencimiento?.ToString("yyyy-MM-dd") ?? "Sin fecha")</td>
-                <td>
-                    <!-- Botón Marcar Como Completada -->
-                    <form method="post" asp-action="MarcarCompletada" asp-controller="Home">
-                        <input type="hidden" name="tareaId" value="@tarea.Id" />
-                        <button type="submit" class="btn btn-success">✔ Completar</button>
-                    </form>
-
-                    <!-- Botón Editar -->
-                    <a asp-action="Editar" asp-controller="Home" asp-route-id="@tarea.Id" class="btn btn-primary">✏ Editar</a>
-
-                    <!-- Botón Eliminar -->
-                    <form method="post" asp-action="Eliminar" asp-controller="Home" onsubmit="return confirm('¿Seguro que quieres eliminar esta tarea?');">
-                        <input type="hidden" name="tareaId" value="@tarea.Id" />
-                        <button type="submit" class="btn btn-danger">🗑 Eliminar</button>
-                    </form>
-                </td>
+                <th>Título</th>
+                <th>Descripción</th>
+                <th>Estado</th>
+                <th>Fecha de Vencimiento</th>
+                <th>Acciones</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var tarea in Model.Tareas)
+            {
+                <tr>
+                    <td>@tarea.Titulo</td>
+                    <td>@tarea.Descripcion</td>
+                    <td>@(tarea.Completada ? "✅ Completada" : "⏳ Pendiente")</td>
+                    <td>@(tarea.FechaVencimiento?.ToString("yyyy-MM-dd") ?? "Sin fecha")</td>
+                    <td class="d-flex gap-2">
+                        <form method="post" asp-action="MarcarCompletada" asp-controller="Home">
+                            <input type="hidden" name="tareaId" value="@tarea.Id" />
+                            <button type="submit" class="btn btn-success">✔ Completar</button>
+                        </form>
+
+                        <a asp-action="Editar" asp-controller="Home" asp-route-id="@tarea.Id" class="btn btn-primary">✏ Editar</a>
+
+                        <form method="post" asp-action="Eliminar" asp-controller="Home" onsubmit="return confirm('¿Seguro que quieres eliminar esta tarea?');">
+                            <input type="hidden" name="tareaId" value="@tarea.Id" />
+                            <button type="submit" class="btn btn-danger">🗑 Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
 
 <a asp-action="Crear" class="btn btn-primary">➕ Nueva Tarea</a>

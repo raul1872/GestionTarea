@@ -1,0 +1,55 @@
+﻿body {
+    background-image: url('../images/fondo.jpg');
+    font-family: 'Inter', sans-serif;
+    background-size: cover;
+    height: 100vh;
+}
+
+.navbar {
+    background: rgba(255, 255, 255, 0.2) !important;
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 12px 20px;
+    margin: 15px auto;
+    max-width: 90%;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+#navbarNav {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.d-flex {
+    margin-left: auto;
+}
+
+
+.btn-custom {
+    background: linear-gradient(135deg, #4CAF50, #2E7D32);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    transition: all 0.3s;
+}
+
+    .btn-custom:hover {
+        background: linear-gradient(135deg, #66BB6A, #388E3C);
+    }
+
+.container {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+
+.footer {
+    background: transparent;
+    text-align: center;
+    padding: 10px 0;
+}
