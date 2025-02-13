@@ -24,6 +24,10 @@
         <input type="date" asp-for="FechaVencimiento" class="form-control" />
     </div>
 
+    @if (ViewData.ModelState["Completada"]?.Errors.Count > 0)
+    {
+        <div class="text-bg-danger mt-2">@ViewData.ModelState["Completada"].Errors[0].ErrorMessage</div>
+    }
     <button type="submit" class="btn btn-primary">Actualizar</button>
     <a asp-action="Tarea" class="btn btn-secondary">Cancelar</a>
 </form>

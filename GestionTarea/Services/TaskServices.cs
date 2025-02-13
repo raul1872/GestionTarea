@@ -18,6 +18,8 @@ namespace GestionTarea.Services
 
         public async Task<Tarea> CrearTareaAsync(Tarea tarea)
         {
+            Console.WriteLine($"Guardando tarea: {tarea.Titulo}, Usuario ID: {tarea.Id_Usuario}");
+
             _context.Tarea.Add(tarea);
             await _context.SaveChangesAsync();
             return tarea;
@@ -52,14 +54,15 @@ namespace GestionTarea.Services
             var tarea = await _context.Tarea.FirstOrDefaultAsync(t => t.Id == tareaId && t.Id_Usuario == usuarioId);
             if (tarea == null) return false;
 
-            _context.Tarea.Remove(tarea);
+            tarea.Borrado = true; 
             await _context.SaveChangesAsync();
             return true;
         }
-
-        public async Task<List<Tarea>> ListarTareasAsync(int usuarioId, bool? completada = null, DateTime? fechaVencimiento = null)
+        public async Task<List<Tarea>> ListarTareasAsync(bool? completada = null, DateTime? fechaVencimiento = null)
         {
-            var query = _context.Tarea.Where(t => t.Id_Usuario == usuarioId);
+            IQueryable<Tarea> query = _context.Tarea
+                .Where(t => !t.Borrado) // No mostrar las tareas eliminadas
+                .Include(t => t.Usuario); // Incluir la info del usuario asignado
 
             if (completada.HasValue)
                 query = query.Where(t => t.Completada == completada.Value);
@@ -69,6 +72,7 @@ namespace GestionTarea.Services
 
             return await query.ToListAsync();
         }
+
 
         public async Task<Usuario> ObtenerUsuarioPorGuidAsync(Guid userGuid)
         {
@@ -92,6 +96,20 @@ namespace GestionTarea.Services
 
             await _context.SaveChangesAsync();
             return true;
+        }
+
+        public async Task<EstadisticasTareasViewModel> ObtenerEstadisticasAsync(int usuarioId)
+        {
+            var totalTareasCreadas = await _context.Tarea.CountAsync();
+            var tareasPendientes = await _context.Tarea.CountAsync(t => t.Id_Usuario == usuarioId && !t.Completada && !t.Borrado);
+            var tareasCompletadas = await _context.Tarea.CountAsync(t => t.Id_Usuario == usuarioId && t.Completada && !t.Borrado);
+
+            return new EstadisticasTareasViewModel
+            {
+                TotalTareasCreadas = totalTareasCreadas,
+                TareasPendientes = tareasPendientes,
+                TareasCompletadas = tareasCompletadas
+            };
         }
     }
 }

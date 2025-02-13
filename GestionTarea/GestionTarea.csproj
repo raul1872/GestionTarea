@@ -8,6 +8,8 @@
 
   <ItemGroup>
     <Content Remove="wwwroot\css\Layout.cs" />
+    <Content Remove="wwwroot\css\Tarea.css" />
+    <Content Remove="wwwroot\css\Tareas.css" />
   </ItemGroup>
 
   <ItemGroup>

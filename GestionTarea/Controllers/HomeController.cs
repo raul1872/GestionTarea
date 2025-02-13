@@ -24,9 +24,16 @@ namespace GestionTarea.Controllers
             _context = context;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            if (User.Identity.IsAuthenticated)
+            {
+                int usuarioId = await ObtenerIdUsuario();
+                var estadisticas = await _taskService.ObtenerEstadisticasAsync(usuarioId);
+                return View(estadisticas);
+            }
+
+            return View(null); 
         }
 
         [Authorize]
@@ -56,7 +63,7 @@ namespace GestionTarea.Controllers
                 return Unauthorized(); 
             }
 
-            var tareas = await _taskService.ListarTareasAsync(usuarioId, completadas, fechaVencimiento);
+            var tareas = await _taskService.ListarTareasAsync(completadas, fechaVencimiento);
 
             var model = new ListaTareasViewModel
             {
@@ -66,7 +73,9 @@ namespace GestionTarea.Controllers
                     Titulo = t.Titulo,
                     Descripcion = t.Descripcion,
                     FechaVencimiento = t.FechaVencimiento,
-                    Completada = t.Completada
+                    Completada = t.Completada,
+                    Id_UsuarioAsignado = t.Id_Usuario,
+                    NombreUsuarioAsignado = t.Usuario?.Nombre ?? "Desconocido"
                 }).ToList(),
                 FiltroCompletadas = completadas,
                 FiltroFechaVencimiento = fechaVencimiento
@@ -79,18 +88,55 @@ namespace GestionTarea.Controllers
         //-----------------------------------------------------------------------------------------
 
         [HttpGet]
-        public IActionResult Crear()
+        public async Task<IActionResult> Crear()
         {
-            return View(new TareaViewModel());
+            var usuarios = await _context.Usuario
+                .Select(u => new UsuarioViewModel
+                {
+                    Id_Usuario = u.Id_Usuario,
+                    Nombre = u.Nombre 
+                })
+                .ToListAsync();
+
+            var model = new TareaViewModel
+            {
+                UsuariosDisponibles = usuarios
+            };
+
+            return View(model);
         }
 
         [HttpPost]
         public async Task<IActionResult> Crear(TareaViewModel model)
         {
-            if (!ModelState.IsValid)
-                return View(model);
+            _logger.LogInformation("Se ha recibido una solicitud para crear una nueva tarea");
 
-            int usuarioId = await ObtenerIdUsuario(); // Método para obtener el Id_Usuario correctamente
+            if (!ModelState.IsValid)
+            {
+                _logger.LogWarning("El modelo no es válido");
+
+                foreach (var error in ModelState)
+                {
+                    foreach (var subError in error.Value.Errors)
+                    {
+                        _logger.LogError($"Error en {error.Key}: {subError.ErrorMessage}");
+                    }
+                }
+
+                // Recargar la lista de usuarios disponibles si hay errores
+                model.UsuariosDisponibles = await _context.Usuario
+                    .Select(u => new UsuarioViewModel
+                    {
+                        Id_Usuario = u.Id_Usuario,
+                        Nombre = u.Nombre
+                    })
+                    .ToListAsync();
+
+                return View(model);
+            }
+
+            int usuarioId = await ObtenerIdUsuario();
+            _logger.LogInformation($"ID del usuario autenticado: {usuarioId}");
 
             var nuevaTarea = new Tarea
             {
@@ -98,13 +144,15 @@ namespace GestionTarea.Controllers
                 Descripcion = model.Descripcion,
                 FechaVencimiento = model.FechaVencimiento,
                 Completada = false,
-                Id_Usuario = usuarioId
+                Id_Usuario = model.Id_UsuarioAsignado ?? usuarioId
             };
 
+            _logger.LogInformation($"Guardando tarea: {nuevaTarea.Titulo}");
             await _taskService.CrearTareaAsync(nuevaTarea);
 
             return RedirectToAction("Tarea");
         }
+
         //-------------------------------------------------------------------------
         private async Task<int> ObtenerIdUsuario()
         {
@@ -177,9 +225,11 @@ namespace GestionTarea.Controllers
             if (tareaExistente == null)
                 return NotFound("Tarea no encontrada.");
 
-            if (tareaExistente.Completada)
-                return BadRequest("No puedes editar una tarea que ya está completada.");
-
+            if(tareaExistente.Completada)
+            {
+                ModelState.AddModelError("Completada", "No puedes editar una tarea que ya está completa.");
+                return View(model);  
+            }
             var tarea = new Tarea
             {
                 Id = model.Id,
@@ -203,6 +253,10 @@ namespace GestionTarea.Controllers
             await _taskService.EliminarTareaAsync(tareaId, usuarioId);
             return RedirectToAction("Tarea");
         }
+
+        //----------------------------------------------------------------------
+
+
     }
 }
 

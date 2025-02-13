@@ -1,8 +1,38 @@
-﻿@{
+﻿@model GestionTarea.ViewModels.EstadisticasTareasViewModel
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+@if (User.Identity.IsAuthenticated && Model != null)
+{
+    <div class="container mt-4">
+        <h2>Estadísticas de Tareas</h2>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card text-white bg-primary mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Total de Tareas Creadas</h5>
+                        <p class="card-text display-4">@Model.TotalTareasCreadas</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-white bg-warning mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Tareas Pendientes</h5>
+                        <p class="card-text display-4">@Model.TareasPendientes</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-white bg-success mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Tareas Completadas</h5>
+                        <p class="card-text display-4">@Model.TareasCompletadas</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

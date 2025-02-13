@@ -13,6 +13,7 @@ namespace GestionTarea.Models
         public DateTime FechaCreacion { get; set; } = DateTime.Now;
         public DateTime? FechaVencimiento { get; set; }
         public bool Completada { get; set; } = false;
+        public bool Borrado { get; set; } = false;
 
         public int Id_Usuario { get; set; }
         public Usuario Usuario { get; set; }
