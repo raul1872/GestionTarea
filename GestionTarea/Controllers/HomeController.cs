@@ -123,7 +123,6 @@ namespace GestionTarea.Controllers
                     }
                 }
 
-                // Recargar la lista de usuarios disponibles si hay errores
                 model.UsuariosDisponibles = await _context.Usuario
                     .Select(u => new UsuarioViewModel
                     {
@@ -254,7 +253,7 @@ namespace GestionTarea.Controllers
             return RedirectToAction("Tarea");
         }
 
-        //----------------------------------------------------------------------
+        
 
 
     }

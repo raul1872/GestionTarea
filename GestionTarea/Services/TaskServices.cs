@@ -61,8 +61,8 @@ namespace GestionTarea.Services
         public async Task<List<Tarea>> ListarTareasAsync(bool? completada = null, DateTime? fechaVencimiento = null)
         {
             IQueryable<Tarea> query = _context.Tarea
-                .Where(t => !t.Borrado) // No mostrar las tareas eliminadas
-                .Include(t => t.Usuario); // Incluir la info del usuario asignado
+                .Where(t => !t.Borrado) 
+                .Include(t => t.Usuario); 
 
             if (completada.HasValue)
                 query = query.Where(t => t.Completada == completada.Value);
