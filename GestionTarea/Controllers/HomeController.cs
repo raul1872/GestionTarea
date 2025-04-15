@@ -16,7 +16,7 @@ namespace GestionTarea.Controllers
         private readonly ITaskService _taskService;
         private readonly AppDbContext _context;
 
-
+       
         public HomeController(ILogger<HomeController> logger, ITaskService taskService, AppDbContext context)
         {
             _logger = logger;
@@ -252,10 +252,6 @@ namespace GestionTarea.Controllers
             await _taskService.EliminarTareaAsync(tareaId, usuarioId);
             return RedirectToAction("Tarea");
         }
-
-        
-
-
     }
 }
 
