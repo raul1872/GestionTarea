@@ -2,8 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using GestionTarea.Models;
 using GestionTarea.ViewModels;
-using Microsoft.AspNetCore.Authentication;
-using System.Security.Claims;
 
 namespace GestionTarea.Controllers
 {
@@ -35,25 +33,6 @@ namespace GestionTarea.Controllers
                 return View(model);
             }
 
-            #if DEBUG
-                if (model.Email == "prueba@prueba.com" && model.Password == "Prueba123+-")
-                {
-                    var claims = new List<Claim>
-                    {
-                        new Claim(ClaimTypes.Name, "prueba@prueba.com"),
-                        new Claim(ClaimTypes.Email, "prueba@prueba.com"),
-                        new Claim(ClaimTypes.Role, "User")
-                    };
-
-                    var identity = new ClaimsIdentity(claims, "TestLogin");
-                    var principal = new ClaimsPrincipal(identity);
-
-                    await HttpContext.SignInAsync(IdentityConstants.ApplicationScheme, principal);
-
-                    return RedirectToAction("Index", "Home");
-                }
-            #endif
-
             var result = await signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
 
             if (result.Succeeded)
@@ -61,10 +40,9 @@ namespace GestionTarea.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            ModelState.AddModelError(string.Empty, "Inicio de sesión inválido.");
+            ModelState.AddModelError(string.Empty, "Inicio de sesion invalido.");
             return View(model);
         }
-
 
         [HttpGet]
         public IActionResult Register()
