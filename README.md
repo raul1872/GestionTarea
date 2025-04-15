@@ -96,3 +96,9 @@ Contraseña: Prueba123+-
 4) Eliminar tareas (solo el usuario asignado puede hacerlo).
 
 5) Ver estadísticas de tareas en la pantalla principal.
+
+## Preview
+![Preview Index](GestionTarea/wwwroot/images/gtregister.png)
+![Preview Index](GestionTarea/wwwroot/images/gtlogin.png)
+![Preview Index](GestionTarea/wwwroot/images/gtindex.png)
+![Preview Index](GestionTarea/wwwroot/images/gttarea.png)
