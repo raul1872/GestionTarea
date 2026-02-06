@@ -12,8 +12,8 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddScoped<ITaskService, TaskService>();
 
-builder.Services.AddDbContext<AppDbContext>(options => 
-options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 
 builder.Services.AddIdentity<Usuario, IdentityRole>(Options =>
 {
